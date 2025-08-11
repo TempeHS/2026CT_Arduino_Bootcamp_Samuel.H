@@ -21,12 +21,25 @@
     https://github.com/TempeHS/TempeHS_Ardunio_Bootcamp/blob/main/05.analogueRead/Bootcamp-analogueRead.png
 */
 
+static unsigned int myVariableResistor = A0;
+unsigned int resistorValue;
+static unsigned int LED = 8;
 
 void setup() {
-  
+  Serial.begin(9600);
+  pinMode(LED, OUTPUT);
+  // Analogue pins do not need to be configured unless you want to use one as a digitial I/0
 }
 
 void loop() {
-  
+  Serial.print("myVariableResistor:");
+  resistorValue = analogRead(myVariableResistor);
+  Serial.println(resistorValue);
+
+  if (resistorValue > 300 ) {
+  digitalWrite(LED, HIGH);
+  } else {
+  digitalWrite(LED, LOW);
+  }
 }
 
