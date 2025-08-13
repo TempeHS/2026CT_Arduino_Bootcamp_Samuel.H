@@ -25,6 +25,12 @@ static unsigned int redLED = 6;
 static unsigned int onboardLED = 13;
 static unsigned int buttonPIN = 4;
 static unsigned int potPIN = A1; 
+
+// Debounce parameters
+unsigned long lastDebounceTime = 0;
+unsigned long debounceDelay = 100; // milliseconds
+int lastButtonState = LOW;
+int buttonState = LOW;
 bool onSTATE = false;
 
 void setup() {
@@ -37,10 +43,31 @@ void setup() {
 }
 
 void loop() {
-  int read = digitalRead(buttonPIN);
-  if (read == true) {
+  int reading = digitalRead(buttonPIN);
+
+  // Check if button changed
+  if(reading != lastButtonState) {
+    lastDebounceTime= millis();
+  }
+
+  // If enough time has passed (debounce)
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    // If button state changed, update debounced state
+    if (reading != buttonState) {
+      buttonState = reading;
+
+      // Only toggle on a HIGH transition (button press)
+      if (buttonState == HIGH) {
+        onSTATE = !onSTATE;
+      }
+    }
+  }
+
+  if (reading == true) {
     onSTATE = !onSTATE;
   }
+  lastButtonState = reading; // save for next loop
   digitalWrite(onboardLED, onSTATE);
-  delay(200);
+  digitalWrite(redLED, onSTATE);
+  delay(10); // Small delay for stability. As code gets more stable the delay will need to become smaller.
 }
