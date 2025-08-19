@@ -66,8 +66,20 @@ void loop() {
   if (reading == true) {
     onSTATE = !onSTATE;
   }
+
   lastButtonState = reading; // save for next loop
-  digitalWrite(onboardLED, onSTATE);
-  digitalWrite(redLED, onSTATE);
-  delay(10); // Small delay for stability. As code gets more stable the delay will need to become smaller.
+
+  unsigned int dimmer = analogRead(potPIN);
+  Serial.println(dimmer);
+  dimmer = map(dimmer, 0 , 255, 0, 663);
+
+  if (onSTATE) {
+    analogWrite(onboardLED, dimmer);
+    analogWrite(redLED, dimmer);
+  } else {
+    analogWrite(onboardLED, false);
+    analogWrite(redLED, false);
+  }
+
+  delay(10); // Small delay for stability. As code gets larger the delay will need to become smaller.
 }
