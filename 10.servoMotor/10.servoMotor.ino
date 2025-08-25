@@ -22,12 +22,41 @@
     https://github.com/TempeHS/TempeHS_Ardunio_Bootcamp/blob/main/10.servoMotor/Bootcamp-servoMotor.png
 */
 
+// Includes for OLED Screen
+#include <Arduino.h>
+#include <U8g2lib.h>
+#include <SPI.h>
+#include <Wire.h>
+
 #include <Servo.h>
+#include "Ultrasonic.h"
+
+unsigned static int servoPin = 6;
+unsigned static int myUltraSonicSensor = 5;
+
+Servo myservo; // create servo object to control a servo
+Ultrasonic myUltraSonicSensor(myUltraSonicSensor);
+
+int potpin = A1; // analog pin used to connect the potentiometer
+int val;  // variable to read the value from the analog pin
 
 void setup() {
-  
+  myservo.attach(servoPin); // attaches the servo on pin 9 to the servo object
+  Serial.begin(9600);
+  Serial.pintln("Baud 9600");
+  Serial.println("----------------------");
 }
 
 void loop() {
-  
+  val = analogRead(potpin);           // reads the value of th potentiometer
+  val = map(val, 0, 1023, 0, 180);    // scale it to use it with the servo 
+  myservo.write(val);                  // sets the servo position according to
+  delay(15);                          // waits for the servo to get there
+
+  unsigned long RangeInCentimeters;
+
+  RangeInCentimeters = myUltraSonicSensor.distanceRead(); // two measurements
+  Serial.print(RangeInCentimeters); // 0~400cm
+  Serial.println(" cm");
+  delay(250);
 }
