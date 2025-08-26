@@ -32,7 +32,7 @@
 #include "Ultrasonic.h"
 
 unsigned static int servoPin = 6;
-unsigned static int myUltraSonicSensor = 5;
+unsigned static int myUltraSonicPin = 5;
 
 Servo myservo; // create servo object to control a servo
 Ultrasonic myUltraSonicSensor(myUltraSonicSensor);
@@ -40,22 +40,30 @@ Ultrasonic myUltraSonicSensor(myUltraSonicSensor);
 int potpin = A1; // analog pin used to connect the potentiometer
 int val;  // variable to read the value from the analog pin
 
+// Configure OLED
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C OLED(U8G2_R0, SCL, SDA, U8X8_PIN_NONE);
+
 void setup() {
   myservo.attach(servoPin); // attaches the servo on pin 9 to the servo object
   Serial.begin(9600);
-  Serial.pintln("Baud 9600");
+  Serial.println("Baud 9600");
   Serial.println("----------------------");
+
+  OLED.begin();
+  OLED.setFont(u8g2_font_6x12_tf);
+  OLED.drawStr(0, 10, "Version 0.2");
+  OLED.nextPage();
+  delay(3000);
 }
 
 void loop() {
-  val = analogRead(potpin);           // reads the value of th potentiometer
-  val = map(val, 0, 1023, 0, 180);    // scale it to use it with the servo 
-  myservo.write(val);                  // sets the servo position according to
-  delay(15);                          // waits for the servo to get there
 
   unsigned long RangeInCentimeters;
+  RangeInCentimeters = myUltraSonicSensor.distanceRead();
+  val = map(val, 0, 30, 0, 180);      // scale it to use it with the servo 
+  myservo.write(val);                 // sets the servo position according to
+  delay(15);                          // waits for the servo to get there
 
-  RangeInCentimeters = myUltraSonicSensor.distanceRead(); // two measurements
   Serial.print(RangeInCentimeters); // 0~400cm
   Serial.println(" cm");
   delay(250);
