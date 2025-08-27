@@ -55,8 +55,22 @@ void setup() {
 
 void loop() {
 
+  static String inputString = "";
+  static bool stringComplete = false;
+  
+    // Read serial data and build up a string until newline
+  while (Serial.available()) {
+    char inChar = (char)Serial.read();
+    if (inChar == '/n') {
+      stringComplete = true;
+      break;
+    } else if (inChar != '/r') {
+      inputString += inChar;
+    }
+  }
 
   unsigned long RangeInCm; // centimeters
+
   RangeInCm = myUSS.distanceRead();
   myVal = RangeInCm;
   OLED.drawStr(0, 30, myVal);
@@ -64,4 +78,6 @@ void loop() {
   Serial.print(RangeInCm);
   Serial.println(" cm");
   delay(200); 
+
+
 }
