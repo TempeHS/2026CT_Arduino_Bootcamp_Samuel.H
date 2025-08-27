@@ -22,7 +22,7 @@
     https://github.com/TempeHS/TempeHS_Ardunio_Bootcamp/blob/main/10.servoMotor/Bootcamp-servoMotor.png
 */
 
-// Includes for OLED Screen
+// OLED screen components
 #include <Arduino.h>
 #include <U8g2lib.h>
 #include <SPI.h>
@@ -31,40 +31,37 @@
 #include <Servo.h>
 #include "Ultrasonic.h"
 
-unsigned static int servoPin = 6;
-unsigned static int myUltraSonicPin = 5;
+unsigned static int servoPIN = 6;
+unsigned static int ussPIN = 5;
+static unsigned long myVal = 67777777777777777777777777777777777777777777;
 
-Servo myservo; // create servo object to control a servo
-Ultrasonic myUltraSonicSensor(myUltraSonicSensor);
+Servo myservo;
+Ultrasonic myUSS(ussPIN);
 
-int potpin = A1; // analog pin used to connect the potentiometer
-int val;  // variable to read the value from the analog pin
+int val;
 
-// Configure OLED
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C OLED(U8G2_R0, SCL, SDA, U8X8_PIN_NONE);
 
 void setup() {
-  myservo.attach(servoPin); // attaches the servo on pin 9 to the servo object
   Serial.begin(9600);
-  Serial.println("Baud 9600");
-  Serial.println("----------------------");
+  myservo.attach(servoPIN);
 
   OLED.begin();
   OLED.setFont(u8g2_font_6x12_tf);
   OLED.drawStr(0, 10, "Version 0.2");
   OLED.nextPage();
-  delay(3000);
+  delay(3000); 
 }
 
 void loop() {
 
-  unsigned long RangeInCentimeters;
-  RangeInCentimeters = myUltraSonicSensor.distanceRead();
-  val = map(val, 0, 30, 0, 180);      // scale it to use it with the servo 
-  myservo.write(val);                 // sets the servo position according to
-  delay(15);                          // waits for the servo to get there
 
-  Serial.print(RangeInCentimeters); // 0~400cm
+  unsigned long RangeInCm; // centimeters
+  RangeInCm = myUSS.distanceRead();
+  myVal = RangeInCm;
+  OLED.drawStr(0, 30, myVal);
+  OLED.nextPage();
+  Serial.print(RangeInCm);
   Serial.println(" cm");
-  delay(250);
+  delay(200); 
 }
