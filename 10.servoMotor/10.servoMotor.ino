@@ -55,29 +55,17 @@ void setup() {
 
 void loop() {
 
-  static String inputString = "";
-  static bool stringComplete = false;
+  String inputString = "10 cm";
+  String cleanString = "";
   
-    // Read serial data and build up a string until newline
-  while (Serial.available()) {
-    char inChar = (char)Serial.read();
-    if (inChar == '/n') {
-      stringComplete = true;
-      break;
-    } else if (inChar != '/r') {
-      inputString += inChar;
+    // Remove \r and \n from the input string
+    for (unsigned int i = 0; i < inputString.length(); i++) {
+      char inChar = inputString[i];
+      if (inChar != '\n' && inChar != '\r') {
+        cleanString += inChar;
+      }
+      if(inChar == '\n') {
+        cleanString += '_';
+      }
     }
   }
-
-  unsigned long RangeInCm; // centimeters
-
-  RangeInCm = myUSS.distanceRead();
-  myVal = RangeInCm;
-  OLED.drawStr(0, 30, myVal);
-  OLED.nextPage();
-  Serial.print(RangeInCm);
-  Serial.println(" cm");
-  delay(200); 
-
-
-}
