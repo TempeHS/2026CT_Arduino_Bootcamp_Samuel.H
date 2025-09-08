@@ -33,39 +33,46 @@
 
 unsigned static int servoPIN = 6;
 unsigned static int ussPIN = 5;
-static unsigned long myVal = 67777777777777777777777777777777777777777777;
+unsigned static int ledPin = 3;
+
+
+
+
+
+
+int potPIN = A1;
 
 Servo myservo;
 Ultrasonic myUSS(ussPIN);
 
-int val;
-
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C OLED(U8G2_R0, SCL, SDA, U8X8_PIN_NONE);
 
 void setup() {
+  pinMode(3, OUTPUT);
   Serial.begin(9600);
   myservo.attach(servoPIN);
 
   OLED.begin();
   OLED.setFont(u8g2_font_6x12_tf);
-  OLED.drawStr(0, 10, "Version 0.2");
-  OLED.nextPage();
-  delay(3000); 
 }
 
 void loop() {
-
-  String inputString = "10 cm";
-  String cleanString = "";
-  
-    // Remove \r and \n from the input string
-    for (unsigned int i = 0; i < inputString.length(); i++) {
-      char inChar = inputString[i];
-      if (inChar != '\n' && inChar != '\r') {
-        cleanString += inChar;
-      }
-      if(inChar == '\n') {
-        cleanString += '_';
-      }
-    }
+  OLED.clearBuffer();
+  unsigned long range_in_cm;
+  range_in_cm = myUSS.distanceRead();
+  if (range_in_cm < 11) {
+    digitalWrite(ledPin, HIGH);
+    OLED.drawStr(0, 30, "On");
+    } else {
+    digitalWrite(ledPin, LOW);
+    OLED.drawStr(0, 30, "Off");
   }
+  String distanceString = String(range_in_cm);
+  int servoAngle = map(range_in_cm, 0, 100, 0, 180);
+  myservo.write(servoAngle);
+  String servoString = String(servoAngle);
+  OLED.setFont(u8g2_font_6x12_tf);
+  OLED.drawStr(0, 10, distanceString.c_str());
+  OLED.drawStr(0, 20, servoString.c_str());
+  OLED.nextPage();
+}
