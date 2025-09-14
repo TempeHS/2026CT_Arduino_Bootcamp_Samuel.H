@@ -19,5 +19,4 @@ unsigned static int button = 6;
 
 void setup() {
   pinMode(3, OUTPUT);
-  pinMode(6, INPUT)
-}
+  pinMode(6, INPUT);
