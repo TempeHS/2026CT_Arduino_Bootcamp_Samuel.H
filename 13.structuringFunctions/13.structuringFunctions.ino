@@ -1,66 +1,35 @@
 /*
-  Author: 
+  Author: Samuel.H
 
-  Learning Intention:
-  The students will learn to break their code into reusable chunks called functions
+  Intention: To create a system that will read when the button (Pretending it to be a doorbell) is pressed it will be read by the buzzer, 
+which will make a sound, notifying the user someone is pressing the button (or at the door) this will then show 
+on the OLED screen that the button has been pressed, as a state of ON or OFF. 
   
   Success Criteria:
-    1. I understand how a function is called
-    2. I can break a simple program like LED blick into functions that I can be re-use
-    3. I know the computation term 'abstraction.'
-    4. I can create separate my functions into functions.ino files to make my code more manageable
-    5. I can return values from a function and use the value in my code
-    6. I can pass values into my functions to make them more secure
-    7. I know the computation term encapsulation
+    1. Make it Work
 
   Student Notes:
-    
-  Documentation: 
-    https://www.youtube.com/watch?v=mHa1mUd1Kmg
-
-  Schematic:
+    Good luck
+  Documentation:
       
 */
 
-int LED_PIN = 13;
-bool LED_PIN_State = HIGH;
-int randomNum09;
+unsigned static int buzzer = 3;
+unsigned static int button = 6;
+
+Button mybutton;
+button mybutton(button);
+
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C OLED(U8G2_R0, SCL, SDA, U8X8_PIN_NONE);
 
 void setup() {
-  // initialize digital pin with built in LED as output.
-  pinMode(LED_PIN, OUTPUT);
-  // inititise the serial monitor for debugging and output
-  Serial.begin(9600); 
-  randomSeed(analogRead(0));
+  pinMode(3, OUTPUT);
+  pinMode(6, INPUT);
+
+  OLED.begin();
+  OLED.setFont(u8g2_font_6x12_tf);
 }
 
 void loop() {
-  TogglePin(); //Call the TogglePin function
-  digitalWrite(LED_PIN, LED_PIN_State); //Set PIN state
-  DebugLED(); // Write PIN state to the serial monitor for debugging
-  MyDelayFunction(); //Call the MyDelayFunction
-
-  generateRandomNumber();
-  Serial.println(randomNum09);
-  // take through to Serial.println(generateRandomNumber(0, 9)); and back 1 step
-
+  
 }
-
-// A function that waits for a second (1000 milliseconds)
-void MyDelayFunction() {
-  delay(1000); 
-}
-
-// A Function that toggles a bool value true to false or false to true 
-void TogglePin() {
-  LED_PIN_State = !LED_PIN_State; 
-}
-
-void DebugLED() {
-  Serial.println("The LED connected to PIN " + String(LED_PIN) + " is " + String(LED_PIN_State));     // Print LED status to serial monitor
-}
-
-void generateRandomNumber () {
-  randomNum09 = random(0, 9);
-}
-
