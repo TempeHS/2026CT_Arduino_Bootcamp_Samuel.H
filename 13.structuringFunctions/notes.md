@@ -15,3 +15,24 @@ My system will read when the button (Pretending it to be a doorbell) is pressed 
 2. 3x Wires
 3. 1x Connection Wire USB-C to Micro-B
 
+#### My Pseudocode
+
+BEGIN
+
+Setup Buzzer
+Setup OLED
+Setup Button
+
+WHILE Power is ON:
+    READ Button
+
+    IF State is ON:
+        // Alert (1)
+        Turn Buzzer ON
+        END
+    ELSE:
+        // Alert (2)
+        Display message on OLED Screen
+        END
+
+END
