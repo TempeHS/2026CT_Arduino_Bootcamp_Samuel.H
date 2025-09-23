@@ -14,11 +14,14 @@ on the OLED screen that the button has been pressed, as a state of ON or OFF.
       
 */
 
+#include <Arduino.h>
+#include <U8g2lib.h>
+#include <SPI.h>
+#include <Wire.h>
+
+
 unsigned static int buzzer = 3;
 unsigned static int button = 6;
-
-Button mybutton;
-button mybutton(button);
 
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C OLED(U8G2_R0, SCL, SDA, U8X8_PIN_NONE);
 
@@ -31,5 +34,37 @@ void setup() {
 }
 
 void loop() {
-  
+  int buttonState = digitalRead(button);
+
+   OLED.clearBuffer();
+
+  if (buttonState == HIGH) {
+  // Button is pressed
+  digitalWrite(buzzer, HIGH);   // Turn on buzzer
+  delay(200);  
+  // Display OFF state
+    OLED.setCursor(0, 20);
+    OLED.print("Doorbell State:");
+    OLED.setCursor(0, 40);
+    OLED.print("ON");
+    // Send buffer to display
+    OLED.sendBuffer();
+  }
+  else if (buttonState == LOW) {
+  // Button is pressed
+  digitalWrite(buzzer, LOW);   // Turn on buzzer
+  delay(200);         
+  // Display OFF state
+    OLED.setCursor(0, 20);
+    OLED.print("Doorbell State:");
+    OLED.setCursor(0, 40);
+    OLED.print("OFF");
+    // Send buffer to display
+    OLED.sendBuffer();        
+    }
+
+  // Small delay to debounce and reduce flicker
+  delay(100);
 }
+
+
