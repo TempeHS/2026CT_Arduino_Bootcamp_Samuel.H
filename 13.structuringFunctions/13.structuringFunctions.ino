@@ -41,7 +41,8 @@ void loop() {
   if (buttonState == HIGH) {
   // Button is pressed
   digitalWrite(buzzer, HIGH);   // Turn on buzzer
-  delay(200);  
+  tone(buzzer, 1000, 1000);
+  delay(20);  
   // Display OFF state
     OLED.setCursor(0, 20);
     OLED.print("Doorbell State:");
@@ -53,18 +54,18 @@ void loop() {
   else if (buttonState == LOW) {
   // Button is pressed
   digitalWrite(buzzer, LOW);   // Turn on buzzer
-  delay(200);         
+  delay(20);         
   // Display OFF state
     OLED.setCursor(0, 20);
     OLED.print("Doorbell State:");
     OLED.setCursor(0, 40);
     OLED.print("OFF");
     // Send buffer to display
-    OLED.sendBuffer();        
+    OLED.sendBuffer();
     }
 
   // Small delay to debounce and reduce flicker
-  delay(100);
+  delay(10);
 }
 
 
